@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center font-weight-bold mt-5">Task Manager</h1>
+
+    <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#createModal">
+        <h3>
+            <i class="bi bi-plus-circle-dotted" style="font-size: 2rem"></i>
+            Add Task
+        </h3>
+    </button>
+
+    <table class="table mt-3 text-center">
+        <thead>
+            <tr>
+                <th scope="col" class="fs-3">ID</th>
+                <th scope="col" class="fs-3">Title</th>
+                <th scope="col" class="fs-3">Description</th>
+                <th scope="col" class="fs-3">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td class="fs-5">{{ task[0] }}</td>
+                <td class="fs-5">{{ task[1] }}</td>
+                <td class="fs-5">{{ task[2] }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#editModal{{ task[0] }}">
+                        <i class="bi bi-pencil-square" style="font-size: 2rem"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteModal{{ task[0] }}">
+                        <i class="bi bi-trash3" style="font-size: 2rem"></i>
+                    </button>
+                </td>
+            </tr>
+
+            <form action="/create" method="post">
+                <div class="modal fade" data-bs-backdrop="static" id="createModal" tabindex="-1"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">Create New Task</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label fs-3" for="title">Title</label>
+                                            <input class="form-control fs-5" type="text" name="title" id="title"
+                                                placeholder="" pattern="^[a-zA-Z\sáéíóúñÁÉÍÓÚ]+$" required />
+                                            <div class="invalid-feedback">
+                                                Please enter a valid title.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fs-3" for="description">Description</label>
+                                            <input class="form-control fs-5" type="text" name="description"
+                                                id="description" placeholder="" pattern="^[a-zA-Z\sáéíóúñÁÉÍÓÚ]+$"
+                                                required />
+                                            <div class="invalid-feedback">
+                                                Please enter a valid description.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-floppy" style="font-size: 2rem"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <form action="/update/{{ task[0] }}" method="post">
+                <div class="modal fade" data-bs-backdrop="static" id="editModal{{ task[0] }}" tabindex="-1"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">Task Details</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label fs-3" for="title">Title</label>
+                                            <input class="form-control fs-5" type="text" name="title" id="title"
+                                                placeholder="" value="{{ task[1] }}"
+                                                pattern="^[a-zA-Z\sáéíóúñÁÉÍÓÚ]+$" required />
+                                            <div class="invalid-feedback">
+                                                Please enter a valid title.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fs-3" for="description">Description</label>
+                                            <input class="form-control fs-5" type="text" name="description"
+                                                id="description" placeholder="" value="{{ task[2] }}"
+                                                pattern="^[a-zA-Z\sáéíóúñÁÉÍÓÚ]+$" required />
+                                            <div class="invalid-feedback">
+                                                Please enter a valid description.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-floppy" style="font-size: 2rem"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <form action="/delete/{{ task[0] }}" method="post">
+                <div class="modal fade" data-bs-backdrop="static" id="deleteModal{{ task[0] }}" tabindex="-1"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">Delete Task</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="fs-5">Are you sure to delete this task {{ task[1] }}? This action cannot be
+                                    undone.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check2" style="font-size: 2rem"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                                    <i class="bi bi-x-octagon" style="font-size: 2rem"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+{% endblock %}
