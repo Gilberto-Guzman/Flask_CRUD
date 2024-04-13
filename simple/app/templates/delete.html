@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Delete Task</h1>
+<p>Are you sure you want to delete "{{ task[1] }}"?</p>
+<form method="POST" action="/delete/{{ task[0] }}">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="/" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
